@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ldonatti/teste/forecast/mlruns/643276922548015239/8bc8ce9b6b6642ec8e37d358898d8cc9/artifacts
+end_time: 1681821857371
+entry_point_name: ''
+experiment_id: '643276922548015239'
+lifecycle_stage: active
+run_id: 8bc8ce9b6b6642ec8e37d358898d8cc9
+run_name: __default__
+run_uuid: 8bc8ce9b6b6642ec8e37d358898d8cc9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1681821856927
+status: 3
+tags: []
+user_id: ldonatti

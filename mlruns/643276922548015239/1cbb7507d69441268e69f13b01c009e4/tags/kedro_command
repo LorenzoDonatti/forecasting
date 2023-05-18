@@ -1,0 +1,1 @@
+kedro run --node=normalizingweather --pipeline=data_manipulation

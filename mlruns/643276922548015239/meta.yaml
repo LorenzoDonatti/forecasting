@@ -1,0 +1,6 @@
+artifact_location: file:///home/ldonatti/teste/forecast/mlruns/643276922548015239
+creation_time: 1681781837216
+experiment_id: '643276922548015239'
+last_update_time: 1681781837216
+lifecycle_stage: active
+name: forecast

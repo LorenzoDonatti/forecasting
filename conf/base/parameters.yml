@@ -1,0 +1,25 @@
+links: 
+  - 'https://drive.google.com/file/d/1WFqpQXzzmDZO-Dyos2QSPoF1Lz54P-JJ/view?usp=share_link'
+  - 'https://drive.google.com/file/d/16zvVSmAE3EheGFoUCqsq2hQYS_YQBQcB/view?usp=share_link'
+  - 'https://drive.google.com/file/d/1_os7AbH5xJpHlWF4ekZ1zWG6C1knKkTX/view?usp=share_link'
+  - 'https://drive.google.com/file/d/1p4bXfiBNV3YugAK5UnA__ZfO3oXWZXwU/view?usp=share_link'
+
+outputs: 
+  - '/home/ldonatti/teste/data/01_03_22.csv'
+  - '/home/ldonatti/teste/data/04_06_22.csv'
+  - '/home/ldonatti/teste/data/07_12_22.csv'
+  - '/home/ldonatti/teste/data/temperatura.csv'
+      
+categorical_columns: 
+  - 'hour'
+  - 'dayofweek'
+  - 'quarter'
+  - 'dayofmonth'
+
+numerical_columns: 
+  - 'TEMPERATURA DO AR - BULBO SECO, HORARIA (°C)'
+  - 'UMIDADE RELATIVA DO AR, HORARIA (%)'
+  - 'PRECIPITAÇÃO TOTAL, HORÁRIO (mm)'
+
+n_input: 24
+n_output: 24

@@ -1,0 +1,1 @@
+kedro run --node=predict --pipeline=ml_model

@@ -1,0 +1,117 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+####################DATASETS#########################
+dataset_01_03_22:
+  type: pandas.CSVDataSet
+  filepath: /home/ldonatti/teste/data/01_03_22.csv
+
+dataset_04_06_22:
+  type: pandas.CSVDataSet
+  filepath: /home/ldonatti/teste/data/04_06_22.csv
+
+dataset_07_12_22:
+  type: pandas.CSVDataSet
+  filepath: /home/ldonatti/teste/data/07_12_22.csv
+
+dataset_temp:
+  type: pandas.CSVDataSet
+  filepath: /home/ldonatti/teste/data/temperatura.csv    
+
+
+###############MANIPULAÇÃO DATAFRAMES########
+df:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/df.csv
+
+df4_e:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/df4_e.csv
+
+df_type:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/df_type.csv
+  load_args:
+    parse_dates: ["Data"]
+    date_format: "%d/%m/%Y %H:%M:%S"
+  save_args:
+    index: False
+    date_format: "%d/%m/%Y %H:%M:%S"
+    decimal: .
+
+df4_type:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/df4_type.csv
+  load_args:
+    parse_dates: ["Data"]
+    date_format: "%Y/%m/%d %H%M"
+  save_args:
+    index: False
+    date_format: "%Y/%m/%d %H%M"
+    decimal: .
+
+pot_SA:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/pot_SA.csv
+  load_args:
+    date_format: pd.to_datetime
+  save_args:
+    index: True
+    date_format: "%Y-%m-%d %H:%M"
+    decimal: .  
+
+pot_SA_norm:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/pot_SA_norm.csv
+
+#pot_SA_merge:
+#  type: pandas.CSVDataSet
+#  filepath: data/03_primary/pot_SA_merge.csv  
+
+pot_SA_add:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/pot_SA_add.csv  
+
+  save_args:
+    index: False
+    date_format: "%Y-%m-%d %H:%M"
+    decimal: .
+
+#################DADOS PRÉ TREINO############
+split:
+  type: json.JSONDataSet
+  filepath: data/04_feature/split.json
+
+train_data:
+  type: json.JSONDataSet
+  filepath: data/04_feature/train_data.json
+
+##############METRICAS######################
+metrics:
+ type: tracking.MetricsDataSet
+ filepath: data/08_tracking/metrics.json
+
+mlf_metrics:
+ type: kedro_mlflow.io.metrics.MlflowMetricsDataSet
+
+################MODELS#####################
+best_params:
+  type: json.JSONDataSet
+  filepath: data/05_model_input/best_params.json
+
+best_model@pkl:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/lgbm.pkl   
+
+best_model@mlflow:
+  type: kedro_mlflow.io.models.MlflowModelLoggerDataSet
+  flavor: "mlflow.sklearn"
+
+##################PLOT#####################
+plot_results:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataSet
+  data_set:
+    type: matplotlib.MatplotlibWriter
+    filepath: data/07_model_output/output_plot.png

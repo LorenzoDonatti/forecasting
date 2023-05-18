@@ -1,0 +1,1 @@
+{'lambda_l1': 7.523699789796112e-05, 'lambda_l2': 1.087581429347418e-07, 'num_leaves': 104, 'num_estimators': 692, 'feature_fraction': 0.5333231581658713, 'bagging_fraction': 0.6735767326170956, 'bagging_freq': 2, 'min_child_samples': 55}
