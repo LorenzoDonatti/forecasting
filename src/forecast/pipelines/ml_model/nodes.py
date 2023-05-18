@@ -19,7 +19,6 @@ from sklearn.metrics import mean_absolute_percentage_error
 import optuna
 import json
 
-#from optuna.integration.mlflow import MLflowCallback   Descomentar caso seja necessário a integração de todos os studies do optuna
 import mlflow
 from mlflow.models.signature import infer_signature
 
@@ -39,15 +38,10 @@ def splitdata(pot_SA:pd.DataFrame) -> json:
 
   return split
 
-def trainforecasting(split:json) -> json:
-
-  #train = np.loadtxt('/home/ldonatti/teste/forecast/data/04_feature/train.txt')
-  #train = train.reshape((int(train.shape[0]/24), 24, train.shape[1]))
+def trainforecasting(split:json, n_input:int, n_out:int) -> json:
 
   train = np.asarray(json.loads(split)["train"])
 
-  n_input = 24
-  n_out = 24
   # flatten data
   data = train.reshape((train.shape[0]*train.shape[1], train.shape[2]))
   x_train, y_train = list(), list()
@@ -78,7 +72,7 @@ def trainforecasting(split:json) -> json:
   return train_data
   
 
-def optimize(train_data:json, split:json) -> json:
+def optimize(train_data:json, split:json, n_input:int) -> json:
 
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
@@ -105,7 +99,6 @@ def optimize(train_data:json, split:json) -> json:
     lgbm = LGBMRegressor(**param)
     lgbm.fit(x_train, y_train)
 
-    n_input = 24
     # lista de horas
     history = [x for x in train]
     predictions_lgbm = []
@@ -126,20 +119,15 @@ def optimize(train_data:json, split:json) -> json:
 
     return mape
 
-  #mlflc = MLflowCallback(tracking_uri= mlflow.get_tracking_uri(), metric_name='mape')     optuna studies no mlflow
-  #mlflow.end_run()
-
   study = optuna.create_study(direction="minimize")
-  study.optimize(objective, n_trials=5)#, callbacks=[mlflc])
+  study.optimize(objective, n_trials=5)
 
   mlflow.log_param("best_params", study.best_params)
 
   best_params = json.dumps(study.best_params)
   return best_params
 
-  #return study.best_params
-
-def fitmodel(train_data:json, best_params: json,) -> lightgbm.LGBMRegressor:
+def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
 
   x_train = np.asarray(json.loads(train_data)["x_train"])
   y_train = np.asarray(json.loads(train_data)["y_train"])
@@ -154,14 +142,11 @@ def fitmodel(train_data:json, best_params: json,) -> lightgbm.LGBMRegressor:
 
   return lgbm
 
-def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json) -> tuple[np.array, dict[str,Any], dict[str,Any]]:
+def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[np.array, dict[str,Any], dict[str,Any]]:
 
-  print(type(lgbm))
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
 
-  n_input = 24
-    # lista de horas
   history = [x for x in train]
   predictions_lgbm = []
   for i in range(len(test)):

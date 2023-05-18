@@ -18,13 +18,13 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=trainforecasting,
-                inputs="split",
+                inputs=["split","params:n_input","params:n_out"],
                 outputs="train_data",
                 name="trainforecasting",
             ),
             node(
                 func=optimize,
-                inputs=["train_data", "split"],
+                inputs=["train_data", "split", "params:n_input"],
                 outputs="best_params",
                 name="optimize",
             ),
@@ -36,7 +36,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=predict,
-                inputs=["best_model@pkl","split"],
+                inputs=["best_model@pkl","split", "params:n_input"],
                 outputs=["predictions_lgbm","metrics", "mlf_metrics"],
                 name="predict",
             ),

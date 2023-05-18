@@ -11,7 +11,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=preprocessdata,
-                inputs=["dataset_01_03_22", "dataset_04_06_22", "dataset_07_12_22","dataset_temp"],
+                inputs=["dataset_01_03_22", "dataset_04_06_22", "dataset_07_12_22","dataset_temp", "params:search_columns"],
                 outputs=["df","df4_e"],
                 name="preprocessdata",
             ),
@@ -29,7 +29,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=removeless24,
-                inputs=["df_entype","df4_type"],
+                inputs=["df_entype","df4_type","params:column_to_forecast"],
                 outputs="pot_SA",
                 name="removeless24",
             ),
@@ -41,13 +41,13 @@ def create_pipeline(**kwargs) -> Pipeline:
             #),            
             node(
                 func=addfeatures,
-                inputs="pot_SA",
+                inputs=["pot_SA","params:column_to_forecast"],
                 outputs="pot_SA_add",
                 name="addfeatures",
             ),
             node(
                 func=normalizingweather,
-                inputs="pot_SA_add",
+                inputs=["pot_SA_add","params:numerical_columns"],
                 outputs="pot_SA_norm",
                 name="normalizingweather",
             ),

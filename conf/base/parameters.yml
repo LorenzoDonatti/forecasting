@@ -10,6 +10,23 @@ outputs:
   - '/home/ldonatti/teste/data/07_12_22.csv'
   - '/home/ldonatti/teste/data/temperatura.csv'
       
+search_columns:
+  - 'Data'
+  - 'Hora UTC'
+  - 'TEMPERATURA DO AR'
+  - 'UMIDADE RELATIVA'
+  - 'PRECIPITAÇÃO'
+
+column_to_forecast: 'ETC - Energia consumida (kWh)'
+#column_to_forecast: 'SA - Potência aparente na fase A (VA)'
+
+time_features:
+  - 'hour'
+  - 'dayofweek'
+  - 'quarter'
+  - 'month'
+  - 'dayofmonth'
+
 categorical_columns: 
   - 'hour'
   - 'dayofweek'
@@ -22,4 +39,4 @@ numerical_columns:
   - 'PRECIPITAÇÃO TOTAL, HORÁRIO (mm)'
 
 n_input: 24
-n_output: 24
+n_out: 24

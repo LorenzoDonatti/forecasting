@@ -12,26 +12,20 @@ from datetime import date
 
 from math import sqrt
 
-def preprocessdata(df1: pd.DataFrame, df2: pd.DataFrame, df3: pd.DataFrame, df4: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    col_temp = df4.columns*df4.columns.str.contains('TEMPERATURA DO AR')
-    col_temp = col_temp.drop('')[0]
+def preprocessdata(df1: pd.DataFrame, df2: pd.DataFrame, df3: pd.DataFrame, df4: pd.DataFrame, searchfor:list) -> tuple[pd.DataFrame, pd.DataFrame]:
+  cols = df4.columns*df4.columns.str.contains('|'.join(searchfor))
+  cols = cols.drop('')
 
-    col_umidade = df4.columns*df4.columns.str.contains('UMIDADE RELATIVA')
-    col_umidade = col_umidade.drop('')[0]
+  df4 = df4[cols]
 
-    col_chuva = df4.columns*df4.columns.str.contains('PRECIPITAÇÃO')
-    col_chuva = col_chuva.drop('')[0]
+  df = pd.concat([df1,df2,df3])
 
-    df4 = df4[['Data', 'Hora UTC', col_temp,col_umidade,col_chuva]]
+  num_validos = df.notna().sum()
+  num_validos = num_validos[num_validos==0].index
+  ######Valores que serão removidos
+  df.drop(columns=num_validos, inplace=True)
 
-    df = pd.concat([df1,df2,df3])
-
-    num_validos = df.notna().sum()
-    num_validos = num_validos[num_validos==0].index
-    ######Valores que serão removidos
-    df.drop(columns=num_validos, inplace=True)
-
-    return df, df4
+  return df, df4
 
 def changetype(df: pd.DataFrame, df4:pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
   #Colocando na lista todas as colunas a serem alteradas
@@ -83,9 +77,8 @@ def clean_energy(df:pd.DataFrame) -> pd.DataFrame:
   df['ETC - Energia consumida (kWh)'] = new_array
   return df
 
-def removeless24(df:pd.DataFrame, df4:pd.DataFrame) -> pd.DataFrame:
-  #pot_SA = pd.Series.to_frame(df.groupby(df['Data'].dt.to_period('H'))['SA - Potência aparente na fase A (VA)'].mean())
-  pot_SA = pd.Series.to_frame(df.groupby(df['Data'].dt.to_period('H'))['ETC - Energia consumida (kWh)'].mean())
+def removeless24(df:pd.DataFrame, df4:pd.DataFrame, column:str) -> pd.DataFrame:
+  pot_SA = pd.Series.to_frame(df.groupby(df['Data'].dt.to_period('H'))[column].mean())
   pot_SA.index = pot_SA.index.to_timestamp()
 
   drop = pot_SA.index.strftime('%Y-%m-%d').value_counts()
@@ -112,16 +105,9 @@ def removeless24(df:pd.DataFrame, df4:pd.DataFrame) -> pd.DataFrame:
 
   return pot_SA'''
 
-def addfeatures(pot_SA:pd.DataFrame) -> pd.DataFrame:
+def addfeatures(pot_SA:pd.DataFrame, column:str) -> pd.DataFrame:
   pot_SA['Data'] = pot_SA['Data'].apply(pd.to_datetime)
-  print(pot_SA.dtypes)
 
-  '''pot_SA['hour'] = pot_SA.index.hour
-  pot_SA['dayofweek'] = pot_SA.index.dayofweek
-  pot_SA['quarter'] = pot_SA.index.quarter
-  pot_SA['month'] = pot_SA.index.month
-  pot_SA['dayofmonth'] = pot_SA.index.day'''
-  
   pot_SA['hour'] = pot_SA['Data'].dt.hour
   pot_SA['dayofweek'] = pot_SA['Data'].dt.dayofweek
   pot_SA['quarter'] = pot_SA['Data'].dt.quarter
@@ -131,9 +117,9 @@ def addfeatures(pot_SA:pd.DataFrame) -> pd.DataFrame:
   horizon = 24*7
   temp_df = pot_SA.reset_index()
   #temp_df = temp_df[['Data', 'SA - Potência aparente na fase A (VA)']]
-  temp_df = temp_df[['Data', 'ETC - Energia consumida (kWh)']]
+  temp_df = temp_df[['Data', column]]
   #temp_df.rename(columns={'Data': 'ds', 'SA - Potência aparente na fase A (VA)': 'y'}, inplace=True)
-  temp_df.rename(columns={'Data': 'ds', 'ETC - Energia consumida (kWh)': 'y'}, inplace=True)
+  temp_df.rename(columns={'Data': 'ds', column: 'y'}, inplace=True)
 
   #take last week of the dataset for validation
   train, test = temp_df.iloc[:-horizon,:], temp_df.iloc[-horizon:,:]
@@ -176,10 +162,7 @@ def addfeatures(pot_SA:pd.DataFrame) -> pd.DataFrame:
 
   return pot_SA
 
-def normalizingweather(pot_SA:pd.DataFrame) -> pd.DataFrame:
-
-  categorical_columns = ['hour','dayofweek','quarter','dayofmonth']
-  numerical_columns = ['TEMPERATURA DO AR - BULBO SECO, HORARIA (°C)','UMIDADE RELATIVA DO AR, HORARIA (%)','PRECIPITAÇÃO TOTAL, HORÁRIO (mm)']
+def normalizingweather(pot_SA:pd.DataFrame, numerical_columns:list) -> pd.DataFrame:
 
   for column in numerical_columns: 
     pot_SA[column] = pot_SA[column]  / pot_SA[column].abs().max() 
