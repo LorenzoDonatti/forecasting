@@ -1,1 +1,0 @@
-kedro run --node=optimize --pipeline=ml_model

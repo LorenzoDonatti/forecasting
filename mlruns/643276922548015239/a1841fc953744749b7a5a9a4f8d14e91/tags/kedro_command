@@ -1,1 +1,0 @@
-kedro run --node=preprocessdata --pipeline=data_manipulation

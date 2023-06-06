@@ -1,1 +1,0 @@
-kedro run --node=plotresults --pipeline=ml_model

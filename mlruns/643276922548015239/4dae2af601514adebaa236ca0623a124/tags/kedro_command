@@ -1,1 +1,0 @@
-kedro run --node=changetype --pipeline=__default__

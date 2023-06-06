@@ -66,153 +66,262 @@ with DAG(
 
     tasks = {}
 
-    tasks["downfiles"] = KedroOperator(
-        task_id="downfiles",
+    tasks["teste-da-0-downfiles"] = KedroOperator(
+        task_id="teste-da-0-downfiles",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="downfiles",
+        node_name="teste_da_0.downfiles",
         project_path=project_path,
         env=env,
     )
 
-    tasks["preprocessdata"] = KedroOperator(
-        task_id="preprocessdata",
+    tasks["teste-da-1-downfiles"] = KedroOperator(
+        task_id="teste-da-1-downfiles",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="preprocessdata",
+        node_name="teste_da_1.downfiles",
         project_path=project_path,
         env=env,
     )
 
-    tasks["changetype"] = KedroOperator(
-        task_id="changetype",
+    tasks["teste-dm-0-preprocessdata"] = KedroOperator(
+        task_id="teste-dm-0-preprocessdata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="changetype",
+        node_name="teste_dm_0.preprocessdata",
         project_path=project_path,
         env=env,
     )
 
-    tasks["clean-energy"] = KedroOperator(
-        task_id="clean-energy",
+    tasks["teste-dm-1-preprocessdata"] = KedroOperator(
+        task_id="teste-dm-1-preprocessdata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="clean_energy",
+        node_name="teste_dm_1.preprocessdata",
         project_path=project_path,
         env=env,
     )
 
-    tasks["removeless24"] = KedroOperator(
-        task_id="removeless24",
+    tasks["teste-dm-0-clean-energy"] = KedroOperator(
+        task_id="teste-dm-0-clean-energy",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="removeless24",
+        node_name="teste_dm_0.clean_energy",
         project_path=project_path,
         env=env,
     )
 
-    tasks["addfeatures"] = KedroOperator(
-        task_id="addfeatures",
+    tasks["teste-dm-1-clean-energy"] = KedroOperator(
+        task_id="teste-dm-1-clean-energy",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="addfeatures",
+        node_name="teste_dm_1.clean_energy",
         project_path=project_path,
         env=env,
     )
 
-    tasks["normalizingweather"] = KedroOperator(
-        task_id="normalizingweather",
+    tasks["teste-dm-0-removeless24"] = KedroOperator(
+        task_id="teste-dm-0-removeless24",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="normalizingweather",
+        node_name="teste_dm_0.removeless24",
         project_path=project_path,
         env=env,
     )
 
-    tasks["splitdata"] = KedroOperator(
-        task_id="splitdata",
+    tasks["teste-dm-1-removeless24"] = KedroOperator(
+        task_id="teste-dm-1-removeless24",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="splitdata",
+        node_name="teste_dm_1.removeless24",
         project_path=project_path,
         env=env,
     )
 
-    tasks["trainforecasting"] = KedroOperator(
-        task_id="trainforecasting",
+    tasks["teste-dm-0-addfeatures"] = KedroOperator(
+        task_id="teste-dm-0-addfeatures",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="trainforecasting",
+        node_name="teste_dm_0.addfeatures",
         project_path=project_path,
         env=env,
     )
 
-    tasks["optimize"] = KedroOperator(
-        task_id="optimize",
+    tasks["teste-dm-1-addfeatures"] = KedroOperator(
+        task_id="teste-dm-1-addfeatures",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="optimize",
+        node_name="teste_dm_1.addfeatures",
         project_path=project_path,
         env=env,
     )
 
-    tasks["fitmodel"] = KedroOperator(
-        task_id="fitmodel",
+    tasks["teste-ml-0-splitdata"] = KedroOperator(
+        task_id="teste-ml-0-splitdata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="fitmodel",
+        node_name="teste_ml_0.splitdata",
         project_path=project_path,
         env=env,
     )
 
-    tasks["predict"] = KedroOperator(
-        task_id="predict",
+    tasks["teste-ml-1-splitdata"] = KedroOperator(
+        task_id="teste-ml-1-splitdata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="predict",
+        node_name="teste_ml_1.splitdata",
         project_path=project_path,
         env=env,
     )
 
-    tasks["plotresults"] = KedroOperator(
-        task_id="plotresults",
+    tasks["teste-ml-0-trainforecasting"] = KedroOperator(
+        task_id="teste-ml-0-trainforecasting",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="plotresults",
+        node_name="teste_ml_0.trainforecasting",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-1-trainforecasting"] = KedroOperator(
+        task_id="teste-ml-1-trainforecasting",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_1.trainforecasting",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-0-optimize"] = KedroOperator(
+        task_id="teste-ml-0-optimize",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_0.optimize",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-1-optimize"] = KedroOperator(
+        task_id="teste-ml-1-optimize",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_1.optimize",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-0-fitmodel"] = KedroOperator(
+        task_id="teste-ml-0-fitmodel",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_0.fitmodel",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-1-fitmodel"] = KedroOperator(
+        task_id="teste-ml-1-fitmodel",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_1.fitmodel",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-0-predict"] = KedroOperator(
+        task_id="teste-ml-0-predict",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_0.predict",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-1-predict"] = KedroOperator(
+        task_id="teste-ml-1-predict",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_1.predict",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-0-plotresults"] = KedroOperator(
+        task_id="teste-ml-0-plotresults",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_0.plotresults",
+        project_path=project_path,
+        env=env,
+    )
+
+    tasks["teste-ml-1-plotresults"] = KedroOperator(
+        task_id="teste-ml-1-plotresults",
+        package_name=package_name,
+        pipeline_name=pipeline_name,
+        node_name="teste_ml_1.plotresults",
         project_path=project_path,
         env=env,
     )
 
 
 
-    tasks["predict"] >> tasks["plotresults"]
+    tasks["teste-ml-1-optimize"] >> tasks["teste-ml-1-fitmodel"]
 
-    tasks["splitdata"] >> tasks["plotresults"]
+    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-fitmodel"]
 
-    tasks["splitdata"] >> tasks["optimize"]
+    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-optimize"]
 
-    tasks["splitdata"] >> tasks["predict"]
+    tasks["teste-ml-1-predict"] >> tasks["teste-ml-1-plotresults"]
 
-    tasks["splitdata"] >> tasks["trainforecasting"]
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-plotresults"]
 
-    tasks["addfeatures"] >> tasks["normalizingweather"]
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-optimize"]
 
-    tasks["trainforecasting"] >> tasks["optimize"]
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-predict"]
 
-    tasks["trainforecasting"] >> tasks["fitmodel"]
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-trainforecasting"]
 
-    tasks["changetype"] >> tasks["clean-energy"]
+    tasks["teste-ml-0-predict"] >> tasks["teste-ml-0-plotresults"]
 
-    tasks["changetype"] >> tasks["removeless24"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-plotresults"]
 
-    tasks["fitmodel"] >> tasks["predict"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-optimize"]
 
-    tasks["clean-energy"] >> tasks["removeless24"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-predict"]
 
-    tasks["optimize"] >> tasks["fitmodel"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-trainforecasting"]
 
-    tasks["preprocessdata"] >> tasks["changetype"]
+    tasks["teste-dm-0-clean-energy"] >> tasks["teste-dm-0-removeless24"]
 
-    tasks["normalizingweather"] >> tasks["splitdata"]
+    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-removeless24"]
 
-    tasks["removeless24"] >> tasks["addfeatures"]
+    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-clean-energy"]
+
+    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-optimize"]
+
+    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-fitmodel"]
+
+    tasks["teste-dm-0-addfeatures"] >> tasks["teste-ml-0-splitdata"]
+
+    tasks["teste-dm-0-removeless24"] >> tasks["teste-dm-0-addfeatures"]
+
+    tasks["teste-ml-0-fitmodel"] >> tasks["teste-ml-0-predict"]
+
+    tasks["teste-da-0-downfiles"] >> tasks["teste-dm-0-preprocessdata"]
+
+    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-clean-energy"]
+
+    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-removeless24"]
+
+    tasks["teste-ml-1-fitmodel"] >> tasks["teste-ml-1-predict"]
+
+    tasks["teste-da-1-downfiles"] >> tasks["teste-dm-1-preprocessdata"]
+
+    tasks["teste-dm-1-addfeatures"] >> tasks["teste-ml-1-splitdata"]
+
+    tasks["teste-ml-0-optimize"] >> tasks["teste-ml-0-fitmodel"]
+
+    tasks["teste-dm-1-removeless24"] >> tasks["teste-dm-1-addfeatures"]
+
+    tasks["teste-dm-1-clean-energy"] >> tasks["teste-dm-1-removeless24"]

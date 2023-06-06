@@ -3,47 +3,55 @@ This is a boilerplate pipeline 'data_aquisition'
 generated using Kedro 0.18.7
 """
 
-from typing import Any, Dict, Tuple
-
-from prophet import Prophet
-import numpy as np
+from typing import Any, Dict
 import pandas as pd
-from datetime import date
-import gdown
 
-import matplotlib.pyplot as plt
-from kedro.extras.datasets.matplotlib import MatplotlibWriter
+import influxdb_client
+from influxdb_client.client.write_api import SYNCHRONOUS
 
-import lightgbm
-from lightgbm import LGBMRegressor
+import warnings
+from influxdb_client.client.warnings import MissingPivotFunction
 
-'''def down_files() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    links = ['https://drive.google.com/file/d/1WFqpQXzzmDZO-Dyos2QSPoF1Lz54P-JJ/view?usp=share_link',
-             'https://drive.google.com/file/d/16zvVSmAE3EheGFoUCqsq2hQYS_YQBQcB/view?usp=share_link',
-             'https://drive.google.com/file/d/1_os7AbH5xJpHlWF4ekZ1zWG6C1knKkTX/view?usp=share_link',
-             'https://drive.google.com/file/d/1p4bXfiBNV3YugAK5UnA__ZfO3oXWZXwU/view?usp=share_link']
+import yaml
 
-    outputs = ['/home/ldonatti/teste/data/01_03_22.csv', '/home/ldonatti/teste/data/04_06_22.csv', 
-               '/home/ldonatti/teste/data/07_12_22.csv', '/home/ldonatti/teste/data/temperatura.csv']
+
+def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFrame:
+    warnings.simplefilter("ignore", MissingPivotFunction)
+
+    id = dev_id.split('-')[1]
+
+    dev = [dev_id]
+    dev = '[{}]'.format(', '.join('"{}"'.format(item) for item in dev))
+
+    client = influxdb_client.InfluxDBClient(
+        url=url,
+        token=token,
+        org=org,
+        timeout=100_000
+    )
+
+# Query script
+    query_api = client.query_api()
+    query = 'from(bucket:"mux-energia-telemedicao-b")\
+    |> range(start: -60d, stop: now())\
+    |> filter(fn: (r) => r["_measurement"] == "payload")\
+    |> filter(fn: (r) => r["_field"] == "consumed_total_energy")\
+    |> filter(fn: (r) => contains(value: r["dev_id"], set: {setf}))\
+    |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\
+    |> pivot(rowKey:["_time"], columnKey: ["dev_id"], valueColumn: "_value")\
+    |> drop(columns:["_start", "_stop", "_measurement"])'.format(setf = dev)
+
+    result = client.query_api().query_data_frame(org=org, query=query)
+    result.to_csv('/home/ldonatti/teste/forecast/data/03_primary/data_{name}.csv'.format(name=id))
+    '''data = """
+    data_{name}:
+        type: pandas.CSVDataSet
+        filepath: data/03_primary/data_{name}.csv
+  """.format(name=id)
     
-    for i in range(len(links)):
-        link = links[i]
-        output = outputs[i]
-        gdown.download(link, output, quiet=True, fuzzy=True)
+    names = yaml.safe_load(data)
 
-    df1 = pd.read_csv(outputs[0], sep=',')
-    df2 = pd.read_csv(outputs[1], sep=',')
-    df3 = pd.read_csv(outputs[2], sep=',')
-    df4 = pd.read_csv(outputs[3], sep=',')
+    with open('/home/ldonatti/teste/forecast/conf/base/catalog.yml', 'a') as file:
+        yaml.safe_dump(names, file)'''
 
-    return df1, df2, df3, df4'''
-
-
-def downfiles(links:list, outputs:list) -> None:
-    
-    for i in range(len(links)):
-        link = links[i]
-        output = outputs[i]
-        gdown.download(link, output, quiet=True, fuzzy=True)
-
-    return None
+    return result

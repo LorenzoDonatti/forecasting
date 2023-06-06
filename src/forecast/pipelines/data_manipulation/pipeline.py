@@ -3,53 +3,73 @@ This is a boilerplate pipeline 'data_manipulation'
 generated using Kedro 0.18.7
 """
 
-from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import preprocessdata, changetype, clean_energy, removeless24, addfeatures, normalizingweather
+from kedro.pipeline import Pipeline, node
+from kedro.pipeline.modular_pipeline import pipeline
+from .nodes import preprocessdata, clean_energy, removeless24, addfeatures#, normalizingweather
+
+import forecast.pipelines.data_aquisition.utils as utils
 
 def create_pipeline(**kwargs) -> Pipeline:
-    return pipeline(
+    data_manipulation = pipeline(
         [
             node(
                 func=preprocessdata,
-                inputs=["dataset_01_03_22", "dataset_04_06_22", "dataset_07_12_22","dataset_temp", "params:search_columns"],
-                outputs=["df","df4_e"],
+                inputs=["data","dataset_temp", "params:search_columns"],
+                outputs=["df","df4"],
                 name="preprocessdata",
             ),
             node(
-                func=changetype,
-                inputs=["df", "df4_e"],
-                outputs=["df_type","df4_type"],
-                name="changetype",
-            ),
-            node(
                 func=clean_energy,
-                inputs="df_type",
-                outputs="df_entype",
+                inputs="df",
+                outputs="df_type",
                 name="clean_energy",
             ),
             node(
                 func=removeless24,
-                inputs=["df_entype","df4_type","params:column_to_forecast"],
+                inputs=["df_type","df4","params:column_to_forecast"],
                 outputs="pot_SA",
                 name="removeless24",
-            ),
-            #node(
-            #    func=mergedata,
-            #    inputs=["pot_SA", "df4_type"],
-            #    outputs="pot_SA_merge",
-            #    name="mergedata",
-            #),            
+            ),           
             node(
                 func=addfeatures,
                 inputs=["pot_SA","params:column_to_forecast"],
                 outputs="pot_SA_add",
                 name="addfeatures",
             ),
-            node(
-                func=normalizingweather,
-                inputs=["pot_SA_add","params:numerical_columns"],
-                outputs="pot_SA_norm",
-                name="normalizingweather",
-            ),
+            #node(
+            #    func=normalizingweather,
+            #    inputs=["pot_SA_add","params:numerical_columns"],
+            #    outputs="pot_SA_norm",
+            #    name="normalizingweather",
+            #),
         ]
     )
+    dm_pipeline = []
+
+    dev_id = utils.get_str(bucket='mux-energia-telemedicao-b', 
+                           org='fox-iot',
+                           token= 'j5e67MfZPqCGIrepobO2iJs-nOB-4JEBoW_QBfd0Hu7ohNZRzv_Bi59L_2tQwWr-dhD2CMrzRlycabepUxjNKg==',
+                           url= 'https://influxdb-analytics.dev.spinon.com.br')
+                           
+    for i in range(len(dev_id[:2])):
+        id = utils.generate_param(dev_id[i])
+        utils.create_catalog(data_manipulation.all_outputs(), id, 'csv')
+        dm_pipeline.append(pipeline(
+            pipe=data_manipulation,
+            inputs={'data':'data_{}'.format(id),
+                    'dataset_temp':'dataset_temp',
+                    },
+            outputs={'df':'df_{}'.format(id),
+                     'df_type':'df_type_{}'.format(id),
+                     'pot_SA':'pot_SA_{}'.format(id),
+                     'pot_SA_add':'pot_SA_add_{}'.format(id),
+                     'df4':'df4_{}'.format(id)
+                    },
+            namespace="teste_dm_{}".format(i),
+            parameters={"params:search_columns":"params:search_columns",
+                        "params:column_to_forecast":"params:column_to_forecast",
+                        #"params:numerical_columns":"params:numerical_columns",
+            }
+        ))
+
+    return sum(dm_pipeline)

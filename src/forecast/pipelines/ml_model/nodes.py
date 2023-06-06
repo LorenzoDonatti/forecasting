@@ -24,8 +24,10 @@ from mlflow.models.signature import infer_signature
 
 def splitdata(pot_SA:pd.DataFrame) -> json:
 
-  train = pot_SA.iloc[-127*24:-7*24,:]
+  train = pot_SA.iloc[:-7*24,:]
   test = pot_SA.iloc[-7*24:,:]
+
+  print(train)
 
   # restructure into samples of daily data shape is [samples, hours, feature]
   train = np.array(np.split(train, len(train)/24))
@@ -37,6 +39,7 @@ def splitdata(pot_SA:pd.DataFrame) -> json:
   split = json.dumps(split)  # use dump() to write array into file
 
   return split
+
 
 def trainforecasting(split:json, n_input:int, n_out:int) -> json:
 
@@ -116,16 +119,16 @@ def optimize(train_data:json, split:json, n_input:int) -> json:
     predictions_lgbm = np.array(predictions_lgbm)
 
     mape = mean_absolute_percentage_error(test[:,:,0].flatten(), predictions_lgbm.flatten())
-
     return mape
 
   study = optuna.create_study(direction="minimize")
   study.optimize(objective, n_trials=5)
 
-  mlflow.log_param("best_params", study.best_params)
+  #mlflow.log_param("best_params", study.best_params)
 
   best_params = json.dumps(study.best_params)
   return best_params
+
 
 def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
 
@@ -137,12 +140,13 @@ def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
   lgbm = lightgbm.LGBMRegressor(**best_params)
   lgbm.fit(x_train, y_train)
 
-  signature = infer_signature(x_train, lgbm.predict(x_train))
-  mlflow.sklearn.log_model(lgbm, "LGBM", signature=signature)
+  #signature = infer_signature(x_train, lgbm.predict(x_train))
+  #mlflow.sklearn.log_model(lgbm, "LGBM", signature=signature)
 
   return lgbm
 
-def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[np.array, dict[str,Any], dict[str,Any]]:
+
+def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[pd.DataFrame, dict[str,Any], dict[str,Any]]:
 
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
@@ -160,19 +164,21 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
     predictions_lgbm.append(yhat_reg)
     history.append(test[i, :])
   # evaluate predictions hours for each day
-  predictions_lgbm = np.array(predictions_lgbm)
 
-  mape = mean_absolute_percentage_error(test[:,:,0].flatten(), predictions_lgbm.flatten())
+  mape = mean_absolute_percentage_error(test[:,:,0].flatten(), np.array(predictions_lgbm).flatten())
   metrics = {"MAPE": mape}
   mlf_metrics = {"accurracy": {"value": mape, "step": 1}}
+
+  predictions_lgbm = pd.DataFrame(np.array(predictions_lgbm))
 
   return [predictions_lgbm, metrics, mlf_metrics]
 
 
-def plotresults(predictions_lgbm:np.array, split:json):
+def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
 
   test = np.asarray(json.loads(split)["test"])
-
+  predictions_lgbm = predictions_lgbm.to_numpy()
+  
   fig, axis = plt.subplots(1, 1, figsize=[20,10])
 
   axis.plot(np.arange(0,24*7), test[:,:,0].flatten()[24*0:24*7], color = 'black', label='Actual')
@@ -185,6 +191,7 @@ def plotresults(predictions_lgbm:np.array, split:json):
 
   axis.legend()
 
-  plot_writer = MatplotlibWriter(filepath="/home/ldonatti/teste/forecast/data/07_model_output/output_plot.png")
+  plot_writer = MatplotlibWriter(filepath="/home/ldonatti/teste/forecast/data/07_model_output/output_plot_{}.png".format(i))
   plt.close()
   plot_writer.save(fig)
+  return None
