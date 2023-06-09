@@ -14,8 +14,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=preprocessdata,
-                inputs=["data","dataset_temp", "params:search_columns"],
-                outputs=["df","df4"],
+                #inputs=["data","dataset_temp", "params:search_columns"],
+                inputs=["data", "params:search_columns"],
+                #outputs=["df","df4"],
+                outputs="df",
                 name="preprocessdata",
             ),
             node(
@@ -26,7 +28,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=removeless24,
-                inputs=["df_type","df4","params:column_to_forecast"],
+                #inputs=["df_type","df4","params:column_to_forecast"],
+                inputs=["df_type","params:column_to_forecast"],
                 outputs="pot_SA",
                 name="removeless24",
             ),           
@@ -51,13 +54,13 @@ def create_pipeline(**kwargs) -> Pipeline:
         dm_pipeline.append(pipeline(
             pipe=data_manipulation,
             inputs={'data':'data_{}'.format(id),
-                    'dataset_temp':'dataset_temp',
+                    #'dataset_temp':'dataset_temp',
                     },
             outputs={'df':'df_{}'.format(id),
                      'df_type':'df_type_{}'.format(id),
                      'pot_SA':'pot_SA_{}'.format(id),
                      'pot_SA_add':'pot_SA_add_{}'.format(id),
-                     'df4':'df4_{}'.format(id)
+                     #'df4':'df4_{}'.format(id)
                     },
             namespace="teste_dm_{}".format(i),
             parameters={"params:search_columns":"params:search_columns",

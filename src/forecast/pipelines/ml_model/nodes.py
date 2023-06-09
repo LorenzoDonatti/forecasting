@@ -191,7 +191,7 @@ def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
 
   axis.legend()
 
-  plot_writer = MatplotlibWriter(filepath="/home/ldonatti/teste/forecast/data/07_model_output/output_plot_{}.png".format(i))
+  plot_writer = MatplotlibWriter(filepath="data/07_model_output/output_plot_{}.png".format(i))
   plt.close()
   plot_writer.save(fig)
   return None

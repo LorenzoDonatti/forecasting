@@ -10,10 +10,10 @@ import pandas as pd
 
 from math import sqrt
 
-def preprocessdata(df: pd.DataFrame, df4: pd.DataFrame, searchfor:list) -> tuple[pd.DataFrame, pd.DataFrame]:
-  
-  cols = df4.columns[df4.columns.str.contains('|'.join(searchfor))]
-  df4 = df4[cols]
+#def preprocessdata(df: pd.DataFrame, df4: pd.DataFrame, searchfor:list) -> tuple[pd.DataFrame, pd.DataFrame]:
+def preprocessdata(df: pd.DataFrame, searchfor:list) -> pd.DataFrame:
+  #cols = df4.columns[df4.columns.str.contains('|'.join(searchfor))]
+  #df4 = df4[cols]
 
   cols = df.columns[df.columns.str.contains('|'.join(['fxrl','_time']))]
   df = df[cols]
@@ -21,7 +21,7 @@ def preprocessdata(df: pd.DataFrame, df4: pd.DataFrame, searchfor:list) -> tuple
   col = df.columns[df.columns.str.contains('fxrl')][0]
   df.rename(columns={col:'ETC - Energia consumida (kWh)'}, inplace=True)
 
-  return df, df4
+  return df#, df4
 
 
 def clean_energy(df:pd.DataFrame) -> pd.DataFrame:
@@ -39,8 +39,8 @@ def clean_energy(df:pd.DataFrame) -> pd.DataFrame:
   return df
 
 
-def removeless24(pot_SA:pd.DataFrame, df4:pd.DataFrame, column:str) -> pd.DataFrame:
-
+#def removeless24(pot_SA:pd.DataFrame, df4:pd.DataFrame, column:str) -> pd.DataFrame:
+def removeless24(pot_SA:pd.DataFrame, column:str) -> pd.DataFrame:
   pot_SA['_time'] = pot_SA['_time'].apply(pd.to_datetime)
   drop = pot_SA['_time'].dt.strftime('%Y-%m-%d').value_counts()
   drop = drop[drop<24].index

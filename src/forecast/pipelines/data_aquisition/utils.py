@@ -40,7 +40,7 @@ def generate_param(dev_id:str):
 
     names = yaml.safe_load(data)
 
-    with open('/home/ldonatti/teste/forecast/conf/base/parameters.yml', 'a') as file:
+    with open('conf/base/parameters.yml', 'a') as file:
         yaml.safe_dump(names, file)
 
     return id
@@ -53,7 +53,7 @@ def create_catalog(names:set, id:str, kind:str):
             data = """
             {name}_{id}:
                 type: pandas.CSVDataSet
-                filepath: /home/ldonatti/teste/forecast/data/03_primary/{name}_{id}.csv
+                filepath: data/03_primary/{name}_{id}.csv
                 save_args:
                     index: False
                     date_format: "%Y/%m/%d %H%M"
@@ -65,13 +65,13 @@ def create_catalog(names:set, id:str, kind:str):
                 data = """
                 {name}_{id}:
                     type: pickle.PickleDataSet
-                    filepath: /home/ldonatti/teste/forecast/data/06_models/{name}_{id}.pkl
+                    filepath: data/06_models/{name}_{id}.pkl
                 """.format(name=name,id=id)
             elif name == 'predictions_lgbm':
                 data = """
                 {name}_{id}:
                     type: pandas.CSVDataSet
-                    filepath: /home/ldonatti/teste/forecast/data/07_model_output/{name}_{id}.csv
+                    filepath: data/07_model_output/{name}_{id}.csv
                     save_args:
                         index: False
                         decimal: .
@@ -82,13 +82,13 @@ def create_catalog(names:set, id:str, kind:str):
                 data = """
                 {name}_{id}:
                     type: json.JSONDataSet
-                    filepath: /home/ldonatti/teste/forecast/data/04_feature/{name}_{id}.json
+                    filepath: data/04_feature/{name}_{id}.json
                     """.format(name=name,id=id)
 
 
         data = yaml.safe_load(data)
 
-        with open('/home/ldonatti/teste/forecast/conf/base/catalog.yml', 'a') as file:
+        with open('conf/base/catalog.yml', 'a') as file:
             yaml.safe_dump(data, file)
      
     return None    
