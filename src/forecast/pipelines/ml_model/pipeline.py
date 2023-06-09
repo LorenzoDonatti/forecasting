@@ -62,13 +62,6 @@ def create_pipeline(**kwargs) -> Pipeline:
         utils.create_catalog(ml_model.all_outputs(), id, 'json')
         ml_pipeline.append(pipeline(
             pipe=ml_model,
-            #inputs={'pot_SA_add':'pot_SA_add_{}'.format(id),
-            #        'split':'split_{}'.format(id),
-            #        'train_data':'train_data_{}'.format(id),
-            #        'best_params':'best_params_{}'.format(id),
-            #        'best_model':'best_model_{}'.format(id),
-            #        'predictions_lgbm':'predictions_lgbm_{}'.format(id),
-            #        },
             inputs={'pot_SA_add':'pot_SA_add_{}'.format(id)},
             outputs={'split':'split_{}'.format(id),
                      'train_data':'train_data_{}'.format(id),

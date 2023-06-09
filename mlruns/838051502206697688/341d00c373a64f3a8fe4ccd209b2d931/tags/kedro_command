@@ -1,0 +1,1 @@
+kedro run --node=teste_da_0.downfiles --pipeline=__default__

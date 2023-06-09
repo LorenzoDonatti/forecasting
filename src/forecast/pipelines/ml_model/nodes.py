@@ -160,10 +160,10 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
     # guarda na lista
     input_x = data[-n_input:, :]
     yhat_reg = lgbm.predict(input_x)
-  # forecast the next week
+    # forecast the next week
     predictions_lgbm.append(yhat_reg)
     history.append(test[i, :])
-  # evaluate predictions hours for each day
+    # evaluate predictions hours for each day
 
   mape = mean_absolute_percentage_error(test[:,:,0].flatten(), np.array(predictions_lgbm).flatten())
   metrics = {"MAPE": mape}

@@ -12,8 +12,6 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 import warnings
 from influxdb_client.client.warnings import MissingPivotFunction
 
-import yaml
-
 
 def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFrame:
     warnings.simplefilter("ignore", MissingPivotFunction)
@@ -43,15 +41,5 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
 
     result = client.query_api().query_data_frame(org=org, query=query)
     result.to_csv('/home/ldonatti/teste/forecast/data/03_primary/data_{name}.csv'.format(name=id))
-    '''data = """
-    data_{name}:
-        type: pandas.CSVDataSet
-        filepath: data/03_primary/data_{name}.csv
-  """.format(name=id)
-    
-    names = yaml.safe_load(data)
-
-    with open('/home/ldonatti/teste/forecast/conf/base/catalog.yml', 'a') as file:
-        yaml.safe_dump(names, file)'''
 
     return result

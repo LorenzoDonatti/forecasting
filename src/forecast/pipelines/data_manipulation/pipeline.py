@@ -5,7 +5,7 @@ generated using Kedro 0.18.7
 
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
-from .nodes import preprocessdata, clean_energy, removeless24, addfeatures#, normalizingweather
+from .nodes import preprocessdata, clean_energy, removeless24, addfeatures
 
 import forecast.pipelines.data_aquisition.utils as utils
 
@@ -36,12 +36,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="pot_SA_add",
                 name="addfeatures",
             ),
-            #node(
-            #    func=normalizingweather,
-            #    inputs=["pot_SA_add","params:numerical_columns"],
-            #    outputs="pot_SA_norm",
-            #    name="normalizingweather",
-            #),
         ]
     )
     dm_pipeline = []
@@ -68,7 +62,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             namespace="teste_dm_{}".format(i),
             parameters={"params:search_columns":"params:search_columns",
                         "params:column_to_forecast":"params:column_to_forecast",
-                        #"params:numerical_columns":"params:numerical_columns",
             }
         ))
 
