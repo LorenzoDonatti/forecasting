@@ -50,7 +50,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                            
     for i in range(len(dev_id[:2])):
         id = utils.generate_param(dev_id[i])
-        utils.create_catalog(data_manipulation.all_outputs(), id, 'csv')
+        #utils.create_catalog(data_manipulation.all_outputs(), id, 'csv')
         dm_pipeline.append(pipeline(
             pipe=data_manipulation,
             inputs={'data':'data_{}'.format(id),

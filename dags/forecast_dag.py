@@ -266,13 +266,7 @@ with DAG(
 
 
 
-    tasks["teste-ml-1-optimize"] >> tasks["teste-ml-1-fitmodel"]
-
-    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-fitmodel"]
-
-    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-optimize"]
-
-    tasks["teste-ml-1-predict"] >> tasks["teste-ml-1-plotresults"]
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-trainforecasting"]
 
     tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-plotresults"]
 
@@ -280,48 +274,50 @@ with DAG(
 
     tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-predict"]
 
-    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-trainforecasting"]
+    tasks["teste-dm-1-addfeatures"] >> tasks["teste-ml-1-splitdata"]
 
-    tasks["teste-ml-0-predict"] >> tasks["teste-ml-0-plotresults"]
+    tasks["teste-da-1-downfiles"] >> tasks["teste-dm-1-preprocessdata"]
 
     tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-plotresults"]
 
-    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-optimize"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-trainforecasting"]
 
     tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-predict"]
 
-    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-trainforecasting"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-optimize"]
 
-    tasks["teste-dm-0-clean-energy"] >> tasks["teste-dm-0-removeless24"]
+    tasks["teste-ml-0-predict"] >> tasks["teste-ml-0-plotresults"]
 
-    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-removeless24"]
+    tasks["teste-da-0-downfiles"] >> tasks["teste-dm-0-preprocessdata"]
 
-    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-clean-energy"]
-
-    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-optimize"]
-
-    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-fitmodel"]
-
-    tasks["teste-dm-0-addfeatures"] >> tasks["teste-ml-0-splitdata"]
+    tasks["teste-ml-1-predict"] >> tasks["teste-ml-1-plotresults"]
 
     tasks["teste-dm-0-removeless24"] >> tasks["teste-dm-0-addfeatures"]
 
     tasks["teste-ml-0-fitmodel"] >> tasks["teste-ml-0-predict"]
 
-    tasks["teste-da-0-downfiles"] >> tasks["teste-dm-0-preprocessdata"]
+    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-optimize"]
 
-    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-clean-energy"]
+    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-fitmodel"]
 
-    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-removeless24"]
+    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-optimize"]
+
+    tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-fitmodel"]
 
     tasks["teste-ml-1-fitmodel"] >> tasks["teste-ml-1-predict"]
 
-    tasks["teste-da-1-downfiles"] >> tasks["teste-dm-1-preprocessdata"]
-
-    tasks["teste-dm-1-addfeatures"] >> tasks["teste-ml-1-splitdata"]
-
-    tasks["teste-ml-0-optimize"] >> tasks["teste-ml-0-fitmodel"]
+    tasks["teste-dm-0-clean-energy"] >> tasks["teste-dm-0-removeless24"]
 
     tasks["teste-dm-1-removeless24"] >> tasks["teste-dm-1-addfeatures"]
 
     tasks["teste-dm-1-clean-energy"] >> tasks["teste-dm-1-removeless24"]
+
+    tasks["teste-dm-0-addfeatures"] >> tasks["teste-ml-0-splitdata"]
+
+    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-clean-energy"]
+
+    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-clean-energy"]
+
+    tasks["teste-ml-0-optimize"] >> tasks["teste-ml-0-fitmodel"]
+
+    tasks["teste-ml-1-optimize"] >> tasks["teste-ml-1-fitmodel"]

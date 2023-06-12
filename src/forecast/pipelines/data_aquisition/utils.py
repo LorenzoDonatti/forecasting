@@ -38,10 +38,10 @@ def generate_param(dev_id:str):
     
     """.format(num=id,dev=dev_id)
 
-    names = yaml.safe_load(data)
+    #names = yaml.safe_load(data)
 
-    with open('conf/base/parameters.yml', 'a') as file:
-        yaml.safe_dump(names, file)
+    #with open('conf/base/parameters.yml', 'a') as file:
+    #    yaml.safe_dump(names, file)
 
     return id
     

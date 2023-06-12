@@ -29,7 +29,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
     for i in range(len(dev_id[:2])):
         id = utils.generate_param(dev_id[i])
-        utils.create_catalog(data_aquisition.all_outputs(), id, 'csv')
+        #utils.create_catalog(data_aquisition.all_outputs(), id, 'csv')
         da_pipeline.append(pipeline(
             pipe=data_aquisition,
             outputs={'data':'data_{}'.format(id)},

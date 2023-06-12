@@ -59,7 +59,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                            
     for i in range(len(dev_id[:2])):
         id = utils.generate_param(dev_id[i])
-        utils.create_catalog(ml_model.all_outputs(), id, 'json')
+        #utils.create_catalog(ml_model.all_outputs(), id, 'json')
         ml_pipeline.append(pipeline(
             pipe=ml_model,
             inputs={'pot_SA_add':'pot_SA_add_{}'.format(id)},
