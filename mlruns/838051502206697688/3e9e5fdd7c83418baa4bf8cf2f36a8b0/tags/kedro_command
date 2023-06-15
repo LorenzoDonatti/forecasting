@@ -1,1 +1,0 @@
-kedro run --node=teste_ml_1.splitdata --pipeline=__default__

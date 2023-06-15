@@ -1,1 +1,0 @@
-kedro run --node=teste_dm_1.clean_energy --pipeline=__default__

@@ -19,15 +19,19 @@ from sklearn.metrics import mean_absolute_percentage_error
 import optuna
 import json
 
-import mlflow
-from mlflow.models.signature import infer_signature
+import influxdb_client
+from influxdb_client import InfluxDBClient, Point, WriteOptions
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+from influxdb_client.client.write.dataframe_serializer import data_frame_to_list_of_points
+
+#import mlflow
+#from mlflow.models.signature import infer_signature
 
 def splitdata(pot_SA:pd.DataFrame) -> json:
 
   train = pot_SA.iloc[:-7*24,:]
   test = pot_SA.iloc[-7*24:,:]
-
-  print(train)
 
   # restructure into samples of daily data shape is [samples, hours, feature]
   train = np.array(np.split(train, len(train)/24))
@@ -173,7 +177,7 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
 
   return [predictions_lgbm, metrics, mlf_metrics]
 
-
+'''
 def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
 
   test = np.asarray(json.loads(split)["test"])
@@ -194,4 +198,50 @@ def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
   plot_writer = MatplotlibWriter(filepath="data/07_model_output/output_plot_{}.png".format(i))
   plt.close()
   plot_writer.save(fig)
+  return None'''
+
+def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, dev_id:str):
+
+  bucket = "mux-energia-telemedicao-b-predicts"
+  org = "fox-iot"
+  token = "j5e67MfZPqCGIrepobO2iJs-nOB-4JEBoW_QBfd0Hu7ohNZRzv_Bi59L_2tQwWr-dhD2CMrzRlycabepUxjNKg=="
+  # Store the URL of your InfluxDB instance
+  url="https://influxdb-analytics.dev.spinon.com.br"
+
+  predictions_lgbm = predictions_lgbm.to_numpy().flatten()
+  #data['_time'] = data['_time'].dt.tz_localize(None)
+
+  print(data[dev_id])
+  print(predictions_lgbm)
+
+  data = data.iloc[-7*24:,:]
+  data[dev_id] = predictions_lgbm
+  
+  client = influxdb_client.InfluxDBClient(
+      url=url,
+      token=token,
+      org=org,
+      timeout=10_000
+  )
+
+  write_api = client.write_api(write_options=WriteOptions(batch_size=1000, 
+                                                          flush_interval=10_000,
+                                                          jitter_interval=2_000,
+                                                          retry_interval=5_000))
+
+  # Convert the DataFrame to InfluxDB-compatible data points
+  data_points = []
+  for _, row in data.iterrows():
+      point = Point('kedro_teste').field(row['_field'], row[dev_id]).tag("dev_id", dev_id).time(row["_time"])
+      data_points.append(point)
+
+  # Write the data points to InfluxDB
+  write_api = client.write_api(write_options=SYNCHRONOUS)
+  write_api.write(bucket=bucket, org=org, record=data_points)
+
+  # Close the InfluxDB client
+  client.close()
+
   return None
+
+

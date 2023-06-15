@@ -59,7 +59,6 @@ def create_catalog(names:set, id:str, kind:str):
                     date_format: "%Y/%m/%d %H%M"
                     decimal: .
                 """.format(name=name,id=id)
-
         else: 
             if name == 'best_model':
                 data = """
@@ -76,15 +75,12 @@ def create_catalog(names:set, id:str, kind:str):
                         index: False
                         decimal: .
                     """.format(name=name,id=id)
-                
-
             else:    
                 data = """
                 {name}_{id}:
                     type: json.JSONDataSet
                     filepath: data/04_feature/{name}_{id}.json
                     """.format(name=name,id=id)
-
 
         data = yaml.safe_load(data)
 

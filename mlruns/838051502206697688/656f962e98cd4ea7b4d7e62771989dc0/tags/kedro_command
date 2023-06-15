@@ -1,1 +1,0 @@
-kedro run --node=teste_dm_1.removeless24 --pipeline=__default__

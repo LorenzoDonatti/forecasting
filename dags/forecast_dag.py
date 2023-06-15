@@ -246,78 +246,78 @@ with DAG(
         env=env,
     )
 
-    tasks["teste-ml-0-plotresults"] = KedroOperator(
-        task_id="teste-ml-0-plotresults",
+    tasks["teste-ml-0-writedata"] = KedroOperator(
+        task_id="teste-ml-0-writedata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="teste_ml_0.plotresults",
+        node_name="teste_ml_0.writedata",
         project_path=project_path,
         env=env,
     )
 
-    tasks["teste-ml-1-plotresults"] = KedroOperator(
-        task_id="teste-ml-1-plotresults",
+    tasks["teste-ml-1-writedata"] = KedroOperator(
+        task_id="teste-ml-1-writedata",
         package_name=package_name,
         pipeline_name=pipeline_name,
-        node_name="teste_ml_1.plotresults",
+        node_name="teste_ml_1.writedata",
         project_path=project_path,
         env=env,
     )
 
 
-
-    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-trainforecasting"]
-
-    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-plotresults"]
-
-    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-optimize"]
-
-    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-predict"]
 
     tasks["teste-dm-1-addfeatures"] >> tasks["teste-ml-1-splitdata"]
 
-    tasks["teste-da-1-downfiles"] >> tasks["teste-dm-1-preprocessdata"]
-
-    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-plotresults"]
-
     tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-trainforecasting"]
-
-    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-predict"]
 
     tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-optimize"]
 
-    tasks["teste-ml-0-predict"] >> tasks["teste-ml-0-plotresults"]
+    tasks["teste-ml-0-splitdata"] >> tasks["teste-ml-0-predict"]
 
-    tasks["teste-da-0-downfiles"] >> tasks["teste-dm-0-preprocessdata"]
+    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-clean-energy"]
 
-    tasks["teste-ml-1-predict"] >> tasks["teste-ml-1-plotresults"]
+    tasks["teste-dm-0-addfeatures"] >> tasks["teste-ml-0-splitdata"]
 
-    tasks["teste-dm-0-removeless24"] >> tasks["teste-dm-0-addfeatures"]
-
-    tasks["teste-ml-0-fitmodel"] >> tasks["teste-ml-0-predict"]
+    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-fitmodel"]
 
     tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-optimize"]
 
-    tasks["teste-ml-1-trainforecasting"] >> tasks["teste-ml-1-fitmodel"]
+    tasks["teste-ml-1-optimize"] >> tasks["teste-ml-1-fitmodel"]
 
     tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-optimize"]
 
     tasks["teste-ml-0-trainforecasting"] >> tasks["teste-ml-0-fitmodel"]
 
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-trainforecasting"]
+
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-predict"]
+
+    tasks["teste-ml-1-splitdata"] >> tasks["teste-ml-1-optimize"]
+
     tasks["teste-ml-1-fitmodel"] >> tasks["teste-ml-1-predict"]
-
-    tasks["teste-dm-0-clean-energy"] >> tasks["teste-dm-0-removeless24"]
-
-    tasks["teste-dm-1-removeless24"] >> tasks["teste-dm-1-addfeatures"]
-
-    tasks["teste-dm-1-clean-energy"] >> tasks["teste-dm-1-removeless24"]
-
-    tasks["teste-dm-0-addfeatures"] >> tasks["teste-ml-0-splitdata"]
-
-    tasks["teste-dm-0-preprocessdata"] >> tasks["teste-dm-0-clean-energy"]
-
-    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-clean-energy"]
 
     tasks["teste-ml-0-optimize"] >> tasks["teste-ml-0-fitmodel"]
 
-    tasks["teste-ml-1-optimize"] >> tasks["teste-ml-1-fitmodel"]
+    tasks["teste-dm-0-removeless24"] >> tasks["teste-dm-0-addfeatures"]
+
+    tasks["teste-da-1-downfiles"] >> tasks["teste-dm-1-preprocessdata"]
+
+    tasks["teste-da-1-downfiles"] >> tasks["teste-ml-1-writedata"]
+
+    tasks["teste-dm-1-preprocessdata"] >> tasks["teste-dm-1-clean-energy"]
+
+    tasks["teste-ml-0-fitmodel"] >> tasks["teste-ml-0-predict"]
+
+    tasks["teste-dm-1-removeless24"] >> tasks["teste-dm-1-addfeatures"]
+
+    tasks["teste-dm-0-clean-energy"] >> tasks["teste-dm-0-removeless24"]
+
+    tasks["teste-ml-1-predict"] >> tasks["teste-ml-1-writedata"]
+
+    tasks["teste-da-0-downfiles"] >> tasks["teste-dm-0-preprocessdata"]
+
+    tasks["teste-da-0-downfiles"] >> tasks["teste-ml-0-writedata"]
+
+    tasks["teste-dm-1-clean-energy"] >> tasks["teste-dm-1-removeless24"]
+
+    tasks["teste-ml-0-predict"] >> tasks["teste-ml-0-writedata"]

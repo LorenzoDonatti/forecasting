@@ -1,1 +1,0 @@
-kedro run --node=teste_dm_0.addfeatures --pipeline=__default__

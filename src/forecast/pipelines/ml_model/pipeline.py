@@ -5,7 +5,7 @@ generated using Kedro 0.18.7
 
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
-from .nodes import splitdata, trainforecasting, optimize, fitmodel, predict, plotresults
+from .nodes import splitdata, trainforecasting, optimize, fitmodel, predict, writedata
 
 import forecast.pipelines.data_aquisition.utils as utils
 
@@ -44,10 +44,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="predict",
             ),
             node(
-                func=plotresults,
-                inputs=["predictions_lgbm", "split", "params:dev_id"],
+                func=writedata,
+                inputs=["data", "predictions_lgbm", "params:dev_id"],
                 outputs=None,
-                name="plotresults",
+                name="writedata",
             ),
         ]
     )
@@ -59,10 +59,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                            
     for i in range(len(dev_id[:2])):
         id = utils.generate_param(dev_id[i])
-        #utils.create_catalog(ml_model.all_outputs(), id, 'json')
+        utils.create_catalog(ml_model.all_outputs(), id, 'json')
         ml_pipeline.append(pipeline(
             pipe=ml_model,
-            inputs={'pot_SA_add':'pot_SA_add_{}'.format(id)},
+            inputs={'pot_SA_add':'pot_SA_add_{}'.format(id),
+                    'data':'data_{}'.format(id),},
             outputs={'split':'split_{}'.format(id),
                      'train_data':'train_data_{}'.format(id),
                      'best_params':'best_params_{}'.format(id),
