@@ -40,7 +40,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=predict,
                 inputs=["best_model","split", "params:n_input"],
-                outputs=["predictions_lgbm","metrics", "mlf_metrics"],
+                outputs=["predictions_lgbm","metrics"],
                 name="predict",
             ),
             node(

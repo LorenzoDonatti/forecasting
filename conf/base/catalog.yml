@@ -65,9 +65,6 @@ metrics:
  type: tracking.MetricsDataSet
  filepath: data/08_tracking/metrics.json
 
-mlf_metrics:
- type: kedro_mlflow.io.metrics.MlflowMetricsDataSet
-
 ################MODELS#####################
 best_params:
   type: json.JSONDataSet
@@ -77,16 +74,10 @@ best_model:
   type: pickle.PickleDataSet
   filepath: data/06_models/lgbm.pkl   
 
-#best_model@mlflow:
-#  type: kedro_mlflow.io.models.MlflowModelLoggerDataSet
-#  flavor: "mlflow.sklearn"
-
 ##################PLOT#####################
-#plot_results:
-#  type: kedro_mlflow.io.artifacts.MlflowArtifactDataSet
-#  data_set:
-#    type: matplotlib.MatplotlibWriter
-#    filepath: data/07_model_output/output_plot.pngpredictions_lgbm_01:
+
+
+predictions_lgbm_01:
   filepath: data/07_model_output/predictions_lgbm_01.csv
   save_args:
     decimal: .
@@ -134,11 +125,129 @@ train_data_02:
 best_params_02:
   filepath: data/04_feature/best_params_02.json
   type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
+best_model_01:
+  filepath: data/06_models/best_model_01.pkl
+  type: pickle.PickleDataSet
+predictions_lgbm_01:
+  filepath: data/07_model_output/predictions_lgbm_01.csv
+  save_args:
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+metrics_01:
+  filepath: data/04_feature/metrics_01.json
   type: json.JSONDataSet
 best_params_01:
   filepath: data/04_feature/best_params_01.json
+  type: json.JSONDataSet
+train_data_01:
+  filepath: data/04_feature/train_data_01.json
+  type: json.JSONDataSet
+split_01:
+  filepath: data/04_feature/split_01.json
+  type: json.JSONDataSet
+best_model_02:
+  filepath: data/06_models/best_model_02.pkl
+  type: pickle.PickleDataSet
+predictions_lgbm_02:
+  filepath: data/07_model_output/predictions_lgbm_02.csv
+  save_args:
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+metrics_02:
+  filepath: data/04_feature/metrics_02.json
+  type: json.JSONDataSet
+best_params_02:
+  filepath: data/04_feature/best_params_02.json
+  type: json.JSONDataSet
+train_data_02:
+  filepath: data/04_feature/train_data_02.json
+  type: json.JSONDataSet
+split_02:
+  filepath: data/04_feature/split_02.json
+  type: json.JSONDataSet
+data_01:
+  filepath: data/03_primary/data_01.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+data_02:
+  filepath: data/03_primary/data_02.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+pot_SA_add_01:
+  filepath: data/03_primary/pot_SA_add_01.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+df_type_01:
+  filepath: data/03_primary/df_type_01.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+pot_SA_01:
+  filepath: data/03_primary/pot_SA_01.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+df_01:
+  filepath: data/03_primary/df_01.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+pot_SA_add_02:
+  filepath: data/03_primary/pot_SA_add_02.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+df_type_02:
+  filepath: data/03_primary/df_type_02.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+pot_SA_02:
+  filepath: data/03_primary/pot_SA_02.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+df_02:
+  filepath: data/03_primary/df_02.csv
+  save_args:
+    date_format: '%Y/%m/%d %H%M'
+    decimal: .
+    index: false
+  type: pandas.CSVDataSet
+split_01:
+  filepath: data/04_feature/split_01.json
+  type: json.JSONDataSet
+best_model_01:
+  filepath: data/06_models/best_model_01.pkl
+  type: pickle.PickleDataSet
+best_params_01:
+  filepath: data/04_feature/best_params_01.json
+  type: json.JSONDataSet
+train_data_01:
+  filepath: data/04_feature/train_data_01.json
   type: json.JSONDataSet
 predictions_lgbm_01:
   filepath: data/07_model_output/predictions_lgbm_01.csv
@@ -149,20 +258,17 @@ predictions_lgbm_01:
 metrics_01:
   filepath: data/04_feature/metrics_01.json
   type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
+split_02:
+  filepath: data/04_feature/split_02.json
   type: json.JSONDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
+best_model_02:
+  filepath: data/06_models/best_model_02.pkl
   type: pickle.PickleDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
 best_params_02:
   filepath: data/04_feature/best_params_02.json
+  type: json.JSONDataSet
+train_data_02:
+  filepath: data/04_feature/train_data_02.json
   type: json.JSONDataSet
 predictions_lgbm_02:
   filepath: data/07_model_output/predictions_lgbm_02.csv
@@ -173,15 +279,6 @@ predictions_lgbm_02:
 metrics_02:
   filepath: data/04_feature/metrics_02.json
   type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
 data_01:
   filepath: data/03_primary/data_01.csv
   save_args:
@@ -203,15 +300,15 @@ pot_SA_01:
     decimal: .
     index: false
   type: pandas.CSVDataSet
-pot_SA_add_01:
-  filepath: data/03_primary/pot_SA_add_01.csv
+df_01:
+  filepath: data/03_primary/df_01.csv
   save_args:
     date_format: '%Y/%m/%d %H%M'
     decimal: .
     index: false
   type: pandas.CSVDataSet
-df_01:
-  filepath: data/03_primary/df_01.csv
+pot_SA_add_01:
+  filepath: data/03_primary/pot_SA_add_01.csv
   save_args:
     date_format: '%Y/%m/%d %H%M'
     decimal: .
@@ -231,15 +328,15 @@ pot_SA_02:
     decimal: .
     index: false
   type: pandas.CSVDataSet
-pot_SA_add_02:
-  filepath: data/03_primary/pot_SA_add_02.csv
+df_02:
+  filepath: data/03_primary/df_02.csv
   save_args:
     date_format: '%Y/%m/%d %H%M'
     decimal: .
     index: false
   type: pandas.CSVDataSet
-df_02:
-  filepath: data/03_primary/df_02.csv
+pot_SA_add_02:
+  filepath: data/03_primary/pot_SA_add_02.csv
   save_args:
     date_format: '%Y/%m/%d %H%M'
     decimal: .
@@ -252,819 +349,3 @@ df_type_02:
     decimal: .
     index: false
   type: pandas.CSVDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet
-predictions_lgbm_01:
-  filepath: data/07_model_output/predictions_lgbm_01.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_01:
-  filepath: data/06_models/best_model_01.pkl
-  type: pickle.PickleDataSet
-split_01:
-  filepath: data/04_feature/split_01.json
-  type: json.JSONDataSet
-train_data_01:
-  filepath: data/04_feature/train_data_01.json
-  type: json.JSONDataSet
-mlf_metrics_01:
-  filepath: data/04_feature/mlf_metrics_01.json
-  type: json.JSONDataSet
-metrics_01:
-  filepath: data/04_feature/metrics_01.json
-  type: json.JSONDataSet
-best_params_01:
-  filepath: data/04_feature/best_params_01.json
-  type: json.JSONDataSet
-predictions_lgbm_02:
-  filepath: data/07_model_output/predictions_lgbm_02.csv
-  save_args:
-    decimal: .
-    index: false
-  type: pandas.CSVDataSet
-best_model_02:
-  filepath: data/06_models/best_model_02.pkl
-  type: pickle.PickleDataSet
-split_02:
-  filepath: data/04_feature/split_02.json
-  type: json.JSONDataSet
-train_data_02:
-  filepath: data/04_feature/train_data_02.json
-  type: json.JSONDataSet
-mlf_metrics_02:
-  filepath: data/04_feature/mlf_metrics_02.json
-  type: json.JSONDataSet
-metrics_02:
-  filepath: data/04_feature/metrics_02.json
-  type: json.JSONDataSet
-best_params_02:
-  filepath: data/04_feature/best_params_02.json
-  type: json.JSONDataSet

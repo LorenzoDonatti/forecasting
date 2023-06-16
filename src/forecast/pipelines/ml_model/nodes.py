@@ -25,8 +25,6 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 from influxdb_client.client.write.dataframe_serializer import data_frame_to_list_of_points
 
-#import mlflow
-#from mlflow.models.signature import infer_signature
 
 def splitdata(pot_SA:pd.DataFrame) -> json:
 
@@ -128,8 +126,6 @@ def optimize(train_data:json, split:json, n_input:int) -> json:
   study = optuna.create_study(direction="minimize")
   study.optimize(objective, n_trials=5)
 
-  #mlflow.log_param("best_params", study.best_params)
-
   best_params = json.dumps(study.best_params)
   return best_params
 
@@ -144,13 +140,10 @@ def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
   lgbm = lightgbm.LGBMRegressor(**best_params)
   lgbm.fit(x_train, y_train)
 
-  #signature = infer_signature(x_train, lgbm.predict(x_train))
-  #mlflow.sklearn.log_model(lgbm, "LGBM", signature=signature)
-
   return lgbm
 
 
-def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[pd.DataFrame, dict[str,Any], dict[str,Any]]:
+def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[pd.DataFrame, dict[str,Any]]:
 
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
@@ -175,7 +168,7 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
 
   predictions_lgbm = pd.DataFrame(np.array(predictions_lgbm))
 
-  return [predictions_lgbm, metrics, mlf_metrics]
+  return [predictions_lgbm, metrics]
 
 '''
 def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
