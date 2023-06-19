@@ -170,28 +170,6 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
 
   return [predictions_lgbm, metrics]
 
-'''
-def plotresults(predictions_lgbm:pd.DataFrame, split:json, i:str):
-
-  test = np.asarray(json.loads(split)["test"])
-  predictions_lgbm = predictions_lgbm.to_numpy()
-  
-  fig, axis = plt.subplots(1, 1, figsize=[20,10])
-
-  axis.plot(np.arange(0,24*7), test[:,:,0].flatten()[24*0:24*7], color = 'black', label='Actual')
-  axis.plot(np.arange(0,24*7), predictions_lgbm.flatten()[24*0:24*7],color ='red', label='Predicted',alpha=1)
-
-  axis.set_title('24 hr Actual vs Predicted')
-  
-  axis.set_xlabel("Hour")
-  axis.set_ylabel("Active Power [kW]")
-
-  axis.legend()
-
-  plot_writer = MatplotlibWriter(filepath="data/07_model_output/output_plot_{}.png".format(i))
-  plt.close()
-  plot_writer.save(fig)
-  return None'''
 
 def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, dev_id:str):
 
@@ -202,7 +180,6 @@ def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, dev_id:str):
   url="https://influxdb-analytics.dev.spinon.com.br"
 
   predictions_lgbm = predictions_lgbm.to_numpy().flatten()
-  #data['_time'] = data['_time'].dt.tz_localize(None)
 
   print(data[dev_id])
   print(predictions_lgbm)

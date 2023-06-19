@@ -11,6 +11,37 @@ from datetime import datetime, timedelta
 from kedro.framework.session import KedroSession
 from kedro.framework.project import configure_project
 
+from airflow.providers.discord.operators.discord_webhook import DiscordWebhookOperator
+
+def send_discord_fail_notification(context):
+    discord_webhook_task = DiscordWebhookOperator(
+        task_id='discord_notification',
+        http_conn_id= 'airflow_teste',
+        webhook_endpoint="webhooks/1119305946166988951/6htQBg_8sicD337CjLvqn93DOQsbQAsJYd4WmWMGlaZwYSPWDmWat4SMzjuW1CsSVl35",
+        message=f":fox::x: Airflow Task '{context['task_instance'].task_id}' from DAG '{context['task_instance'].dag_id}' failed!",
+        username='Fox_airflow_bot' 
+    )
+    discord_webhook_task.execute(context=context)
+
+def send_discord_retry_notification(context):
+    discord_webhook_task = DiscordWebhookOperator(
+        task_id='discord_notification',
+        http_conn_id= 'airflow_teste',
+        webhook_endpoint="webhooks/1119305946166988951/6htQBg_8sicD337CjLvqn93DOQsbQAsJYd4WmWMGlaZwYSPWDmWat4SMzjuW1CsSVl35",
+        message=f":fox::warning: Airflow Task '{context['task_instance'].task_id}' from DAG '{context['task_instance'].dag_id}' up to retry!",
+        username='Fox_airflow_bot'
+    )
+    discord_webhook_task.execute(context=context)
+
+def send_discord_success_notification(context):
+    discord_webhook_task = DiscordWebhookOperator(
+        task_id='discord_notification',
+        http_conn_id= 'airflow_teste',
+        webhook_endpoint="webhooks/1119305946166988951/6htQBg_8sicD337CjLvqn93DOQsbQAsJYd4WmWMGlaZwYSPWDmWat4SMzjuW1CsSVl35",
+        message=f":fox::white_check_mark: Airflow Task '{context['task_instance'].task_id}' from DAG '{context['task_instance'].dag_id}' executed with no errors!",
+        username='Fox_airflow_bot'
+    )
+    discord_webhook_task.execute(context=context)    
 
 class KedroOperator(BaseOperator):
 
@@ -49,17 +80,20 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'email_on_failure': False,
+    'on_success_callback': send_discord_success_notification,
+    'on_retry_callback': send_discord_retry_notification,
+    'on_failure_callback': send_discord_fail_notification,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)
+    'retry_delay': timedelta(minutes=1)
 }
 
 # Using a DAG context manager, you don't have to specify the dag property of each task
 with DAG(
     "forecast",
-    start_date=datetime(2019, 1, 1),
-    max_active_runs=3,
-    schedule_interval=timedelta(minutes=30),  # https://airflow.apache.org/docs/stable/scheduler.html#dag-runs
+    start_date=datetime(2023, 1, 1),
+    max_active_runs=100,
+    schedule_interval=timedelta(minutes=300),  # https://airflow.apache.org/docs/stable/scheduler.html#dag-runs
     default_args=default_args,
     catchup=False # enable if you don't want historical dag runs to run
 ) as dag:

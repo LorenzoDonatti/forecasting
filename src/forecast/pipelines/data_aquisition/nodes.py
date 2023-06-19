@@ -31,7 +31,7 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
 # Query script
     query_api = client.query_api()
     query = 'from(bucket:"mux-energia-telemedicao-b")\
-    |> range(start: -60d, stop: now())\
+    |> range(start: -500d, stop: -400d)\
     |> filter(fn: (r) => r["_measurement"] == "payload")\
     |> filter(fn: (r) => r["_field"] == "consumed_total_energy")\
     |> filter(fn: (r) => contains(value: r["dev_id"], set: {setf}))\
@@ -40,6 +40,5 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
     |> drop(columns:["_start", "_stop", "_measurement"])'.format(setf = dev)
 
     result = client.query_api().query_data_frame(org=org, query=query)
-    #result.to_csv('data/03_primary/data_{name}.csv'.format(name=id))
 
     return result
