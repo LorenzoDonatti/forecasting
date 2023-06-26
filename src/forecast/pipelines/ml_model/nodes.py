@@ -13,6 +13,7 @@ from kedro.extras.datasets.matplotlib import MatplotlibWriter
 
 import lightgbm
 from lightgbm import LGBMRegressor
+
 from math import sqrt
 from sklearn.metrics import mean_absolute_percentage_error
 
@@ -87,19 +88,19 @@ def optimize(train_data:json, split:json, n_input:int) -> json:
 
   def objective(trial):
     param = {
-        "objective": "regression",
-        "metric": "mape",
-        "verbosity": -1,
-        "boosting_type": "gbdt",
-        "lambda_l1": trial.suggest_float("lambda_l1", 1e-8, 10.0, log=True),
-        "lambda_l2": trial.suggest_float("lambda_l2", 1e-8, 10.0, log=True),
-        "num_leaves": trial.suggest_int("num_leaves", 2, 1000),
-        "num_estimators": trial.suggest_int("num_estimators", 2, 1000),
-        "feature_fraction": trial.suggest_float("feature_fraction", 0.4, 1.0),
-        "bagging_fraction": trial.suggest_float("bagging_fraction", 0.4, 1.0),
-        "bagging_freq": trial.suggest_int("bagging_freq", 1, 7),
-        "min_child_samples": trial.suggest_int("min_child_samples", 5, 100),
-        }
+        'metric': 'mape', 
+        'random_state': 48,
+        'n_estimators': 200,
+        'reg_alpha': trial.suggest_float('reg_alpha', 1e-3, 10.0, log=True),
+        'reg_lambda': trial.suggest_float('reg_lambda', 1e-3, 10.0, log=True),
+        'colsample_bytree': trial.suggest_categorical('colsample_bytree', [0.3,0.4,0.5,0.6,0.7,0.8,0.9, 1.0]),
+        'subsample': trial.suggest_categorical('subsample', [0.4,0.5,0.6,0.7,0.8,1.0]),
+        'learning_rate': trial.suggest_categorical('learning_rate', [0.006,0.008,0.01,0.014,0.017,0.02]),
+        'max_depth': trial.suggest_categorical('max_depth', [10,20,100]),
+        'num_leaves' : trial.suggest_int('num_leaves', 1, 1000),
+        'min_child_samples': trial.suggest_int('min_child_samples', 1, 300),
+        'n_jobs' : -1,
+    }     
 
     lgbm = LGBMRegressor(**param)
     lgbm.fit(x_train, y_train)
@@ -124,7 +125,7 @@ def optimize(train_data:json, split:json, n_input:int) -> json:
     return mape
 
   study = optuna.create_study(direction="minimize")
-  study.optimize(objective, n_trials=5)
+  study.optimize(objective, n_trials=10, n_jobs=-1)
 
   best_params = json.dumps(study.best_params)
   return best_params
@@ -164,7 +165,6 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
 
   mape = mean_absolute_percentage_error(test[:,:,0].flatten(), np.array(predictions_lgbm).flatten())
   metrics = {"MAPE": mape}
-  mlf_metrics = {"accurracy": {"value": mape, "step": 1}}
 
   predictions_lgbm = pd.DataFrame(np.array(predictions_lgbm))
 
@@ -180,6 +180,7 @@ def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, dev_id:str):
   url="https://influxdb-analytics.dev.spinon.com.br"
 
   predictions_lgbm = predictions_lgbm.to_numpy().flatten()
+  #data['_time'] = data['_time'].dt.tz_localize(None)
 
   print(data[dev_id])
   print(predictions_lgbm)

@@ -14,7 +14,6 @@ from influxdb_client.client.warnings import MissingPivotFunction
 
 
 def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFrame:
-    warnings.simplefilter("ignore", MissingPivotFunction)
 
     id = dev_id.split('-')[1]
 
@@ -25,13 +24,13 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
         url=url,
         token=token,
         org=org,
-        timeout=100_000
+        timeout=1000_000
     )
 
 # Query script
     query_api = client.query_api()
     query = 'from(bucket:"mux-energia-telemedicao-b")\
-    |> range(start: -500d, stop: -400d)\
+    |> range(start: -150d, stop: now())\
     |> filter(fn: (r) => r["_measurement"] == "payload")\
     |> filter(fn: (r) => r["_field"] == "consumed_total_energy")\
     |> filter(fn: (r) => contains(value: r["dev_id"], set: {setf}))\
@@ -40,5 +39,7 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
     |> drop(columns:["_start", "_stop", "_measurement"])'.format(setf = dev)
 
     result = client.query_api().query_data_frame(org=org, query=query)
+    print('resultado atualizado')
+    #result.to_csv('data/03_primary/data_{name}.csv'.format(name=id))
 
     return result

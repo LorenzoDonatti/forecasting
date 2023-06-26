@@ -38,6 +38,7 @@ def clean_energy(df:pd.DataFrame) -> pd.DataFrame:
 
 def removeless24(pot_SA:pd.DataFrame, column:str) -> pd.DataFrame:
   pot_SA['_time'] = pot_SA['_time'].apply(pd.to_datetime)
+  pot_SA['_time'] = pot_SA['_time'].dt.tz_localize(None)
   drop = pot_SA['_time'].dt.strftime('%Y-%m-%d').value_counts()
   drop = drop[drop<24].index
   for d in drop:
@@ -91,14 +92,10 @@ def addfeatures(pot_SA:pd.DataFrame, column:str) -> pd.DataFrame:
   pot_SA['lag_23hrs'] = pot_SA[pot_SA.columns.values[0]].shift(23)
   pot_SA['lag_25hrs'] = pot_SA[pot_SA.columns.values[0]].shift(25)
   pot_SA['lag_7dias'] = pot_SA[pot_SA.columns.values[0]].shift(24*7)
-  pot_SA['lag_28dias'] = pot_SA[pot_SA.columns.values[0]].shift(24*28)
-  pot_SA['lag_90dias'] = pot_SA[pot_SA.columns.values[0]].shift(24*90)
 
   pot_SA['lag_1dia_y'] = pot_SA['yhat'].shift(24)
   pot_SA['lag_23hrs_y'] = pot_SA['yhat'].shift(23)
   pot_SA['lag_25hrs_y'] = pot_SA['yhat'].shift(25)
   pot_SA['lag_7dias_y'] = pot_SA['yhat'].shift(24*7)
-  pot_SA['lag_28dias_y'] = pot_SA['yhat'].shift(24*28)
-  pot_SA['lag_90dias_y'] = pot_SA['yhat'].shift(24*90)
 
   return pot_SA

@@ -1,32 +1,14 @@
-black~=22.0
-flake8>=3.7.9, <5.0
-ipython>=7.31.1, <8.0; python_version < '3.8'
-ipython~=8.10; python_version >= '3.8'
-isort~=5.0
-kedro~=0.18.7
-kedro-telemetry~=0.2.0
-kedro-airflow==0.5.1
-kedro-datasets==1.0.2
-kedro-docker==0.3.1
-kedro-telemetry==0.2.4
-kedro-viz==5.3.0
-pytest~=7.2
 apache-airflow==2.5.3
-async-timeout==4.0.2
-convertdate==2.4.0
-cookiecutter==2.1.1
-DateTime==5.1
-docker==6.0.1
-influxdb-client==1.36.1
-Jinja2==3.1.2
-jinja2-time==0.2.0
-joblib==1.2.0
-json5==0.9.11
+apache_airflow_providers_common_sql==1.4.0
+influxdb_client==1.36.1
+kedro==0.18.10
 lightgbm==3.3.5
-numpy
+matplotlib==3.7.1
+numpy==1.24.3
 optuna==3.1.1
 pandas==2.0.0
-pickleshare==0.7.5
+prophet==1.1.4
+pytest==7.3.2
 PyYAML==6.0
-scikit-learn==1.2.2
-Prophet
+scikit_learn==1.2.2
+setuptools==65.5.1

@@ -38,10 +38,10 @@ def generate_param(dev_id:str):
     
     """.format(num=id,dev=dev_id)
 
-    #names = yaml.safe_load(data)
+    names = yaml.safe_load(data)
 
-    #with open('conf/base/parameters.yml', 'a') as file:
-    #    yaml.safe_dump(names, file)
+    with open('conf/base/parameters.yml', 'a') as file:
+        yaml.safe_dump(names, file)
 
     return id
     
@@ -51,6 +51,7 @@ def create_catalog(names:set, id:str, kind:str):
     for name in names:
         if kind == 'csv':
             data = """
+
             {name}_{id}:
                 type: pandas.CSVDataSet
                 filepath: data/03_primary/{name}_{id}.csv
@@ -62,12 +63,14 @@ def create_catalog(names:set, id:str, kind:str):
         else: 
             if name == 'best_model':
                 data = """
+
                 {name}_{id}:
                     type: pickle.PickleDataSet
                     filepath: data/06_models/{name}_{id}.pkl
                 """.format(name=name,id=id)
             elif name == 'predictions_lgbm':
                 data = """
+
                 {name}_{id}:
                     type: pandas.CSVDataSet
                     filepath: data/07_model_output/{name}_{id}.csv
@@ -77,6 +80,7 @@ def create_catalog(names:set, id:str, kind:str):
                     """.format(name=name,id=id)
             else:    
                 data = """
+
                 {name}_{id}:
                     type: json.JSONDataSet
                     filepath: data/04_feature/{name}_{id}.json
