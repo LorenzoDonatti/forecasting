@@ -8,9 +8,6 @@ from typing import Any, Dict, Tuple
 import numpy as np
 import pandas as pd
 
-import matplotlib.pyplot as plt
-from kedro.extras.datasets.matplotlib import MatplotlibWriter
-
 import lightgbm
 from lightgbm import LGBMRegressor
 
@@ -26,6 +23,13 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 from influxdb_client.client.write.dataframe_serializer import data_frame_to_list_of_points
 
+import ray
+from ray import tune
+from ray.tune.search.optuna import OptunaSearch
+
+import xgboost
+from xgboost import XGBRegressor
+
 
 def splitdata(pot_SA:pd.DataFrame) -> json:
 
@@ -35,7 +39,6 @@ def splitdata(pot_SA:pd.DataFrame) -> json:
   # restructure into samples of daily data shape is [samples, hours, feature]
   train = np.array(np.split(train, len(train)/24))
   test = np.array(np.split(test, len(test)/24))
-
   split = {"train": train.tolist(),
            "test": test.tolist()}
   
@@ -44,7 +47,8 @@ def splitdata(pot_SA:pd.DataFrame) -> json:
   return split
 
 
-def trainforecasting(split:json, n_input:int, n_out:int) -> json:
+#def trainforecasting(split:json, n_input:int, n_out:int) -> json:
+def trainforecasting(split:json, n_input:int, n_out:int) -> tuple[pd.DataFrame, pd.DataFrame]:
 
   train = np.asarray(json.loads(split)["train"])
 
@@ -65,44 +69,34 @@ def trainforecasting(split:json, n_input:int, n_out:int) -> json:
     # move along one time step of 1 hour
     in_start += 1
 
-  x_train, y_train = np.array(x_train), np.array(y_train)  
+  x_train, y_train = np.asarray(x_train), np.asarray(y_train)  
 
   x_train= np.reshape(x_train, (x_train.shape[0]*x_train.shape[1], x_train.shape[2]))
   y_train = np.reshape(y_train, (y_train.shape[0]*y_train.shape[1],))
 
-  train_data = {"x_train": x_train.tolist(),
-                "y_train": y_train.tolist()}
+  x_train_df = pd.DataFrame(x_train)
+  y_train_df = pd.DataFrame(y_train)
+  x_train = x_train_df.to_numpy()
+  #train_data = {"x_train": x_train.tolist(),
+  #              "y_train": y_train.tolist()}
+  #train_data = json.dumps(train_data)
   
-  train_data = json.dumps(train_data)
-  
-  return train_data
+  return [x_train_df, y_train_df]
   
 
-def optimize(train_data:json, split:json, n_input:int) -> json:
+#def optimize(train_data:json, split:json, n_input:int) -> json:
+def optimize(x_train:pd.DataFrame, y_train:pd.DataFrame, split:json, n_input:int) -> json:
 
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
+  #x_train = np.asarray(json.loads(train_data)["x_train"])
+  #y_train = np.asarray(json.loads(train_data)["y_train"])
+  x_train = x_train.to_numpy()
+  y_train = y_train.to_numpy().reshape(1,-1).T
 
-  x_train = np.asarray(json.loads(train_data)["x_train"])
-  y_train = np.asarray(json.loads(train_data)["y_train"])
+  def objective(config):
 
-  def objective(trial):
-    param = {
-        'metric': 'mape', 
-        'random_state': 48,
-        'n_estimators': 200,
-        'reg_alpha': trial.suggest_float('reg_alpha', 1e-3, 10.0, log=True),
-        'reg_lambda': trial.suggest_float('reg_lambda', 1e-3, 10.0, log=True),
-        'colsample_bytree': trial.suggest_categorical('colsample_bytree', [0.3,0.4,0.5,0.6,0.7,0.8,0.9, 1.0]),
-        'subsample': trial.suggest_categorical('subsample', [0.4,0.5,0.6,0.7,0.8,1.0]),
-        'learning_rate': trial.suggest_categorical('learning_rate', [0.006,0.008,0.01,0.014,0.017,0.02]),
-        'max_depth': trial.suggest_categorical('max_depth', [10,20,100]),
-        'num_leaves' : trial.suggest_int('num_leaves', 1, 1000),
-        'min_child_samples': trial.suggest_int('min_child_samples', 1, 300),
-        'n_jobs' : -1,
-    }     
-
-    lgbm = LGBMRegressor(**param)
+    lgbm = XGBRegressor(**config)
     lgbm.fit(x_train, y_train)
 
     # lista de horas
@@ -122,29 +116,47 @@ def optimize(train_data:json, split:json, n_input:int) -> json:
     predictions_lgbm = np.array(predictions_lgbm)
 
     mape = mean_absolute_percentage_error(test[:,:,0].flatten(), predictions_lgbm.flatten())
-    return mape
+    tune.report(mape=mape)
 
-  study = optuna.create_study(direction="minimize")
-  study.optimize(objective, n_trials=10, n_jobs=-1)
+  analysis = tune.run(objective,
+                      config = {"objective": "reg:squarederror",
+                                'random_state': 48,
+                                'n_estimators': tune.randint(50,500),
+                                'reg_alpha': tune.loguniform(1e-3, 10.0),
+                                'reg_lambda': tune.loguniform(1e-3, 10.0),
+                                'colsample_bytree': tune.choice([0.3,0.4,0.5,0.6,0.7,0.8,0.9, 1.0]),
+                                'subsample': tune.choice([0.4,0.5,0.6,0.7,0.8,1.0]),
+                                'learning_rate': tune.choice([0.006,0.008,0.01,0.014,0.017,0.02]),
+                                'max_depth': tune.choice([10,20,100]),
+                                },
+                      metric="mape", 
+                      mode="min",
+                      search_alg=OptunaSearch(),
+                      num_samples=5,
+                      resources_per_trial={"cpu": 1,
+                                           "gpu": 1},
+                      )
 
-  best_params = json.dumps(study.best_params)
+  best_params = json.dumps(analysis.best_config)
+  ray.shutdown()
   return best_params
 
+#def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
+def fitmodel(x_train:pd.DataFrame, y_train:pd.DataFrame, best_params: json):
 
-def fitmodel(train_data:json, best_params: json) -> lightgbm.LGBMRegressor:
-
-  x_train = np.asarray(json.loads(train_data)["x_train"])
-  y_train = np.asarray(json.loads(train_data)["y_train"])
+  #x_train = np.asarray(json.loads(train_data)["x_train"])
+  #y_train = np.asarray(json.loads(train_data)["y_train"])
+  x_train = x_train.to_numpy()
+  y_train = y_train.to_numpy().reshape(1,-1).T
 
   best_params = json.loads(best_params)
-
-  lgbm = lightgbm.LGBMRegressor(**best_params)
+  lgbm = XGBRegressor(**best_params, tree_method= 'gpu_hist')
   lgbm.fit(x_train, y_train)
 
   return lgbm
 
 
-def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tuple[pd.DataFrame, dict[str,Any]]:
+def predict(lgbm,split:json, n_input:int) -> tuple[pd.DataFrame, dict[str,Any]]:
 
   train = np.asarray(json.loads(split)["train"])
   test = np.asarray(json.loads(split)["test"])
@@ -171,19 +183,10 @@ def predict(lgbm:lightgbm.sklearn.LGBMRegressor,split:json, n_input:int) -> tupl
   return [predictions_lgbm, metrics]
 
 
-def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, dev_id:str):
-
-  bucket = "mux-energia-telemedicao-b-predicts"
-  org = "fox-iot"
-  token = "j5e67MfZPqCGIrepobO2iJs-nOB-4JEBoW_QBfd0Hu7ohNZRzv_Bi59L_2tQwWr-dhD2CMrzRlycabepUxjNKg=="
-  # Store the URL of your InfluxDB instance
-  url="https://influxdb-analytics.dev.spinon.com.br"
+def writedata(data:pd.DataFrame, predictions_lgbm:pd.DataFrame, bucket:str, org:str, token:str, url:str, dev_id:str):
 
   predictions_lgbm = predictions_lgbm.to_numpy().flatten()
   #data['_time'] = data['_time'].dt.tz_localize(None)
-
-  print(data[dev_id])
-  print(predictions_lgbm)
 
   data = data.iloc[-7*24:,:]
   data[dev_id] = predictions_lgbm

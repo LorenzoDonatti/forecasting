@@ -45,7 +45,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                            token= 'j5e67MfZPqCGIrepobO2iJs-nOB-4JEBoW_QBfd0Hu7ohNZRzv_Bi59L_2tQwWr-dhD2CMrzRlycabepUxjNKg==',
                            url= 'https://influxdb-analytics.dev.spinon.com.br')
                            
-    for i in range(len(dev_id[:2])):
+    for i in range(len(dev_id[:50])):
         id = utils.generate_param(dev_id[i])
         utils.create_catalog(data_manipulation.all_outputs(), id, 'csv')
         dm_pipeline.append(pipeline(

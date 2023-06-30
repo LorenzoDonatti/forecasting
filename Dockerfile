@@ -16,6 +16,8 @@ COPY ./dist/forecast-0.1-py3-none-any.whl /tmp/forecast-0.1-py3-none-any.whl
 #COPY ./src/requirements.txt /tmp/requirements.txt
 
 #RUN pip install --upgrade pip setuptools && pip install --no-cache-dir -r /tmp/requirements.txt
-RUN pip install --user /tmp/forecast-0.1-py3-none-any.whl
+RUN pip install --user /tmp/forecast-0.1-py3-none-any.whl -vvv
 
 RUN pip install --user apache-airflow-providers-discord
+
+RUN pip install --user xgboost

@@ -14,7 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=downfiles,
-                inputs=["params:bucket", "params:org","params:token", "params:url", "params:dev_id"],
+                inputs=["params:bucket_read", "params:org","params:token_read", "params:url_read", "params:dev_id"],
                 outputs="data",
                 name="downfiles",
             ),
@@ -27,17 +27,17 @@ def create_pipeline(**kwargs) -> Pipeline:
                            token= 'j5e67MfZPqCGIrepobO2iJs-nOB-4JEBoW_QBfd0Hu7ohNZRzv_Bi59L_2tQwWr-dhD2CMrzRlycabepUxjNKg==',
                            url= 'https://influxdb-analytics.dev.spinon.com.br')
 
-    for i in range(len(dev_id[:2])):
+    for i in range(len(dev_id[:50])):
         id = utils.generate_param(dev_id[i])
         utils.create_catalog(data_aquisition.all_outputs(), id, 'csv')
         da_pipeline.append(pipeline(
             pipe=data_aquisition,
             outputs={'data':'data_{}'.format(id)},
             namespace="teste_da_{}".format(i),
-            parameters={"params:bucket":"params:bucket", 
+            parameters={"params:bucket_read":"params:bucket_read", 
                         "params:org":"params:org",
-                        "params:token":"params:token", 
-                        "params:url":"params:url", 
+                        "params:token_read":"params:token_read", 
+                        "params:url_read":"params:url_read", 
                         "params:dev_id":"params:dev_id_{}".format(id),
                         }
         ))

@@ -34,6 +34,7 @@ def generate_param(dev_id:str):
     id = dev_id.split('-')[1]
 
     data = """
+    
     dev_id_{num}: {dev}
     
     """.format(num=id,dev=dev_id)
@@ -76,6 +77,24 @@ def create_catalog(names:set, id:str, kind:str):
                     filepath: data/07_model_output/{name}_{id}.csv
                     save_args:
                         index: False
+                        decimal: .
+                    """.format(name=name,id=id)
+            elif name == 'x_train':
+                data = """
+
+                {name}_{id}:
+                    type: pandas.CSVDataSet
+                    filepath: data/05_model_input/{name}_{id}.csv
+                    save_args:
+                        decimal: .
+                    """.format(name=name,id=id)
+            elif name == 'y_train':
+                data = """
+
+                {name}_{id}:
+                    type: pandas.CSVDataSet
+                    filepath: data/05_model_input/{name}_{id}.csv
+                    save_args:
                         decimal: .
                     """.format(name=name,id=id)
             else:    

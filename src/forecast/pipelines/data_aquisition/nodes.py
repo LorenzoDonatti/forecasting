@@ -39,7 +39,5 @@ def downfiles(bucket:str, org:str,token:str, url:str, dev_id:str) -> pd.DataFram
     |> drop(columns:["_start", "_stop", "_measurement"])'.format(setf = dev)
 
     result = client.query_api().query_data_frame(org=org, query=query)
-    print('resultado atualizado')
-    #result.to_csv('data/03_primary/data_{name}.csv'.format(name=id))
 
     return result
